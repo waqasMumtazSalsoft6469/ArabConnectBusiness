@@ -1,0 +1,52 @@
+import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import AppBackground from '../../../components/AppBackground';
+import CustomText from '../../../components/CustomText';
+import { family, size } from '../../../utils';
+import { termsData } from '../../../utils/dummyData';
+const { width, height } = Dimensions.get('screen');
+
+const About = () => {
+
+  return (
+    <AppBackground
+    notification={true}
+      title={'ABOUT US'}
+      back={true}
+      marginHorizontal={false}
+    >
+      <View
+        style={{ marginBottom: height * 0.06, marginHorizontal: width * 0.03, marginTop: height*0.03 }}>
+        <FlatList
+          data={termsData}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <CustomText
+                style={{ textAlign: 'justify', flex: 0.92, lineHeight: height * 0.03   }}
+                text={item?.termDetail}
+                size={size?.xxlarge}
+                font={family?.Questrial_Regular}
+              />
+            </View>
+          )}
+          keyExtractor={item => item?.id}
+          showsVerticalScrollIndicator={false}
+
+        />
+      </View>
+    </AppBackground>
+  );
+};
+
+export default About;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  item: {
+    marginVertical: 10,
+    width: '100%',
+    flex: 1,
+
+  },
+})

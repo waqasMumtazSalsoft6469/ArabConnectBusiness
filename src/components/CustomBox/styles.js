@@ -1,0 +1,122 @@
+import { Dimensions, StyleSheet } from 'react-native';
+
+
+const { width, height } = Dimensions.get('screen');
+const styles = StyleSheet.create({
+    contactContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#F1F1F1',
+        paddingVertical: 15,
+        borderRadius: 15
+    }
+});
+
+export default styles;
+
+// amountContainer: {
+//     width: '100%',
+//     paddingHorizontal: 20,
+//     flexDirection: 'row',
+//     ...Shadows.shadow3,
+//     justifyContent: 'space-between',
+//     paddingVertical: 15,
+//     alignItems: 'center',
+
+// },
+// bottomContainer: {
+//     width: '100%',
+//     position: 'absolute',
+//     bottom: 0,
+//     marginBottom: height * 0.03,
+// },
+// container: {
+//     paddingHorizontal: 20,
+//     paddingVertical: 15,
+//     marginTop: 10,
+//     marginBottom: height * 0.02
+// },
+// jobBox: {
+//     flexDirection: 'row',
+//     padding: 15,
+//     paddingVertical: 20,
+//     gap: 10,
+//     backgroundColor: 'white',
+//     borderRadius: 10,
+//     ...Shadows?.shadow5,
+//     alignItems: 'center'
+// },
+// imageContainer: {
+//     width: width * 0.15,
+//     height: height * 0.075,
+//     borderRadius: 13,
+
+// },
+// iconContainer: {
+//     width: width * 0.1,
+//     height: height * 0.05,
+//     borderRadius: 50,
+//     backgroundColor: 'white',
+// },
+// verticalLine: {
+//     borderLeftWidth: 1,
+//     borderColor: colors?.white,
+//     marginTop: 15,
+//     marginBottom: 15,
+//     height: '90%',
+//     alignSelf: 'center',
+// },
+// horizontalBoxContainer2:
+// {
+//     width: '100%',
+//     height: height * 0.1,
+//     marginTop: 10,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     gap: 10,
+// },
+// horizontalBoxContainer1:
+// {
+//     width: '100%',
+//     height: height * 0.1,
+//     marginTop: height * 0.03,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     gap: 10,
+// },
+// peachBox: {
+//     height: '100%',
+//     width: '35%',
+//     borderRadius: 15,
+//     backgroundColor: '#FED0AB',
+//     justifyContent: 'center',
+//     alignItems: 'center', gap: 7
+// },
+// purpleBox: {
+//     height: '100%',
+//     width: '62%',
+//     borderRadius: 15,
+//     backgroundColor: '#CECCFF',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     gap: 7
+// },
+// salaryBox: {
+//     height: '100%',
+//     width: '48%',
+//     borderRadius: 15,
+//     backgroundColor: '#BAE5F4',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     gap: 7
+// },
+// positionBox: {
+//     height: '100%',
+//     width: '49%',
+//     borderRadius: 15,
+//     backgroundColor: '#BDF4C9',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     gap: 7,
+// },

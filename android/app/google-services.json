@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961685041903",
+    "project_id": "arab-connect-business",
+    "storage_bucket": "arab-connect-business.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961685041903:android:4ecdd9b2003140496da11a",
+        "android_client_info": {
+          "package_name": "com.arabconnectbusiness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUBdHPx5k6Lys8V8U6ailzXeQjTS1EtRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
