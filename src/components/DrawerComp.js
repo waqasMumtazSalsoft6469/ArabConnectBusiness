@@ -119,6 +119,26 @@ const menuItems = [
     tint: '#F5B936',
   },
   {
+    icon: appIcons?.campaignIcon,
+    title: 'Flyyer',
+    nav: 'flyyerList',
+    border: '#FF388C',
+    tint: '#FF388C',
+  },
+  {
+    icon: appIcons?.orderHistory2,
+    title: 'Approve/Reject Receipt',
+    nav: 'receiptList',
+    border: '#1C979A',
+  },
+  {
+    icon: appIcons?.rewards,
+    title: 'Point Rule',
+    nav: 'pointRule',
+    border: '#F5B936',
+    tint: '#F5B936',
+  },
+  {
     icon: appIcons?.otherBusiness,
     title: 'BUSINESS',
     // nav: 'myProducts',

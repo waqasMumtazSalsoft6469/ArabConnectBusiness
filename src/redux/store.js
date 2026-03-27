@@ -27,6 +27,9 @@ import {orderApi} from '../Api/orderApiSlice';
 import {feedbackApi} from '../Api/feedbackApiSlice';
 import {campaignApi} from '../Api/campaignApiSlice';
 import {rewardsApi} from '../Api/rewardsApiSlice';
+import {flyerApi} from '../Api/flyerApiSlice';
+import {receiptApi} from '../Api/receiptApiSlice';
+import {pointRuleApi} from '../Api/pointRuleApiSlice';
 
 const persistConfig = {
   key: 'root',
@@ -57,6 +60,9 @@ export const store = configureStore({
       feedbackApi.middleware,
       campaignApi.middleware,
       rewardsApi.middleware,
+      flyerApi.middleware,
+      receiptApi.middleware,
+      pointRuleApi.middleware,
     ),
 });
 

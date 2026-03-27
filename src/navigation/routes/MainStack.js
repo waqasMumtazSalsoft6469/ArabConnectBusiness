@@ -65,6 +65,14 @@ import LoyaltyHub from '../../screens/Main/LoyaltyHub';
 import LoyaltyDashboard from '../../screens/Main/LoyaltyDashboard';
 import Rewards from '../../screens/Main/Rewards';
 import Analytics from '../../screens/Main/Analytics';
+import FlyyerList from '../../screens/Main/FlyyerList/FlyyerList';
+import CreateFlyyerStepOne from '../../screens/Main/CreateFlyyer/StepOne';
+import CreateFlyyerStepTwo from '../../screens/Main/CreateFlyyer/StepTwo';
+import FlyerDetails from '../../screens/Main/FlyerDetails/FlyerDetails';
+import FlyerBuilder from '../../screens/Main/FlyerBuilder/FlyerBuilder';
+import ReceiptList from '../../screens/Main/ReceiptList/ReceiptList';
+import ReceiptDetail from '../../screens/Main/ReceiptDetail/ReceiptDetail';
+import PointRule from '../../screens/Main/PointRule/PointRule';
 
 // Screens
 
@@ -139,6 +147,14 @@ const MainStack = ({initialRoute}) => {
       <Stack.Screen name="analytics" component={Analytics} />
       <Stack.Screen name="dashboard" component={LoyaltyDashboard} />
       <Stack.Screen name="newcampaign" component={NewCampaign} />
+      <Stack.Screen name="flyyerList" component={FlyyerList} />
+      <Stack.Screen name="createFlyyerStep1" component={CreateFlyyerStepOne} />
+      <Stack.Screen name="createFlyyerStep2" component={CreateFlyyerStepTwo} />
+      <Stack.Screen name="flyerDetails" component={FlyerDetails} />
+      <Stack.Screen name="flyerBuilder" component={FlyerBuilder} />
+      <Stack.Screen name="receiptList" component={ReceiptList} />
+      <Stack.Screen name="receiptDetail" component={ReceiptDetail} />
+      <Stack.Screen name="pointRule" component={PointRule} />
       <Stack.Screen name="editcampaign" component={EditCampaign} />
       <Stack.Screen name="newcampaignplus" component={NewCampaignPlus} />
       <Stack.Screen name="otherBusiness" component={OtherBusiness} />

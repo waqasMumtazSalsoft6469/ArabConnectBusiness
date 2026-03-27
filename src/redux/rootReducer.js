@@ -15,6 +15,9 @@ import {orderApi} from '../Api/orderApiSlice';
 import {feedbackApi} from '../Api/feedbackApiSlice';
 import {campaignApi} from '../Api/campaignApiSlice';
 import {rewardsApi} from '../Api/rewardsApiSlice';
+import {flyerApi} from '../Api/flyerApiSlice';
+import {receiptApi} from '../Api/receiptApiSlice';
+import {pointRuleApi} from '../Api/pointRuleApiSlice';
 
 export const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
@@ -32,4 +35,7 @@ export const rootReducer = combineReducers({
   [feedbackApi.reducerPath]: feedbackApi.reducer,
   [campaignApi.reducerPath]: campaignApi.reducer,
   [rewardsApi.reducerPath]: rewardsApi.reducer,
+  [flyerApi.reducerPath]: flyerApi.reducer,
+  [receiptApi.reducerPath]: receiptApi.reducer,
+  [pointRuleApi.reducerPath]: pointRuleApi.reducer,
 });

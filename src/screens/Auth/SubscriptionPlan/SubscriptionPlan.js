@@ -245,7 +245,7 @@ const {width, height} = Dimensions.get('screen');
 
 const SubscriptionPlan = ({route}) => {
   const token = route?.params;
-  console.log('TOKEN: ', token?.token);
+  // console.log('TOKEN: ', token?.token);
   const {data, isLoading} = useFetchPlanByUserQuery();
   LOG('DATA: ', data);
   const [buy, {isLoading: isBuying}] = useBuyMutation();

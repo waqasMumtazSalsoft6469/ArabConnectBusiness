@@ -19,6 +19,12 @@ export const jobCategoryOptions = [
   { key: '15', value: 'Construction & Real Estate' },
 ];
 
+export const STATUS_OPTIONS = [
+  {key: 'all', label: 'All'},
+  {key: 'pending', label: 'Pending'},
+  {key: 'approved', label: 'Approved'},
+  {key: 'rejected', label: 'Rejected'},
+];
 export const subCategoryOptionsMap = {
   'Information Technology (IT) & Software': [
     { key: '1', value: 'Software Development' },

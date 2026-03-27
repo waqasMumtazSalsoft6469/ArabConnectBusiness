@@ -376,7 +376,7 @@ const EditCoupon = ({route}) => {
                   leftIcon={appIcons.calendar2}
                   staric={true}
                   labelStyle={{marginLeft: 20}}
-                  date={values.startDate ? new Date(values.startDate) : null}
+                  date={values.startDate ? new Date(values.startDate) : new Date()}
                   onDateChange={date =>
                     setFieldValue('startDate', date.toISOString())
                   }
@@ -410,7 +410,7 @@ const EditCoupon = ({route}) => {
                   leftIcon={appIcons.calendar2}
                   staric={true}
                   labelStyle={{marginLeft: 20}}
-                  date={values.endDate ? new Date(values.endDate) : null}
+                  date={values.endDate ? new Date(values.endDate) : new Date()}
                   onDateChange={date =>
                     setFieldValue('endDate', date.toISOString())
                   }

@@ -215,7 +215,7 @@ export const executeApiRequestForQueryParams = async ({
 
 export const useSubscriptionGuard = navigation => {
   const {data, isLoading, refetch} = useFetchActiveSubscriptionQuery();
-  console.log('subscription Dataa: ', data?.status);
+  // console.log('subscription Dataa: ', data?.status);
 
   const navigateWithSubscription = (
     routeName,

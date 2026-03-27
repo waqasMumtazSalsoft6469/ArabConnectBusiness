@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
     height: height * 0.065,
     borderRadius: 50,
     paddingHorizontal: 15,
-    paddingVertical: 6,
+    // paddingVertical: 6,
     borderColor: '#F1F1F1',
     backgroundColor: '#EDEDED',
     gap: 6,

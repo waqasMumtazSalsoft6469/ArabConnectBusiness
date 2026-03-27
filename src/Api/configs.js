@@ -230,6 +230,44 @@ export const endpoints = {
       method: 'DELETE',
     },
   },
+  flyer: {
+    fetchFlyers: {
+      url: 'business/flyers',
+      method: 'GET',
+    },
+    fetchFlyerById: {
+      url: 'business/flyers',
+      method: 'GET',
+    },
+    createFlyer: {
+      url: 'business/flyers',
+      method: 'POST',
+    },
+    updateFlyer: {
+      url: 'business/flyers',
+      method: 'PUT',
+    },
+    publishFlyer: {
+      url: 'business/flyers',
+      method: 'PATCH',
+    },
+    unpublishFlyer: {
+      url: 'business/flyers',
+      method: 'PATCH',
+    },
+    updateFlyerSlot: {
+      url: 'business/flyers',
+      method: 'PATCH',
+    },
+    fetchFlyerTemplates: {
+      url: 'business/flyer-templates',
+      method: 'GET',
+    },
+    fetchFlyerTemplateById: {
+      url: 'business/flyer-templates',
+      method: 'GET',
+    },
+  },
   rewards: {
     add: {
       url: 'rewards/addReward',
@@ -252,6 +290,38 @@ export const endpoints = {
       method: 'POST',
     },
   },
+  receipt: {
+    fetchReceipts: {
+      url: 'fetch/business/receipts',
+      method: 'GET',
+    },
+    fetchReceiptById: {
+      url: 'fetch/business/receipts',
+      method: 'GET',
+    },
+    approveReceipt: {
+      url: 'fetch/business/receipts',
+      method: 'PATCH',
+    },
+    rejectReceipt: {
+      url: 'fetch/business/receipts',
+      method: 'PATCH',
+    },
+  },
+  pointRule: {
+    fetchPointRule: {
+      url: 'fetch/business/point-rule',
+      method: 'GET',
+    },
+    createOrUpdatePointRule: {
+      url: 'fetch/business/point-rule',
+      method: 'POST',
+    },
+    togglePointRule: {
+      url: 'fetch/business/point-rule/toggle',
+      method: 'PATCH',
+    },
+  },
 };
 
 export const reducers = {
@@ -268,5 +338,8 @@ export const reducers = {
     product: 'ProdcutApi',
     order: 'orderApi',
     feedback: 'FeedbackApi',
+    flyer: 'FlyerApi',
+    receipt: 'ReceiptApi',
+    pointRule: 'PointRuleApi',
   },
 };

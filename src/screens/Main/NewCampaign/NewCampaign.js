@@ -86,6 +86,7 @@ const NewCampaign = () => {
         type: c.image.type,
       };
     });
+    console.log('payloadpayload', payload);
 
     LOG('✅ Final Campaign Payload:', payload);
 
@@ -311,7 +312,7 @@ const NewCampaign = () => {
                   staric // Assuming this is 'starred' or similar
                   labelStyle={{marginLeft: 20}}
                   captureTime={true} // NEW: Enable time capture for this use case
-                  date={values.startDate ? new Date(values.startDate) : null} // Works with full ISO
+                  date={values.startDate ? new Date(values.startDate) : new Date()} // Works with full ISO
                   onDateChange={date =>
                     setFieldValue('startDate', date.toISOString())
                   } // NEW: Send full ISO, no split
@@ -328,7 +329,7 @@ const NewCampaign = () => {
                   staric
                   captureTime={true}
                   labelStyle={{marginLeft: 20}}
-                  date={values.endDate ? new Date(values.endDate) : null}
+                  date={values.endDate ? new Date(values.endDate) : new Date()}
                   onDateChange={date =>
                     setFieldValue('endDate', date.toISOString())
                   }

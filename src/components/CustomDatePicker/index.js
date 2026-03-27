@@ -141,20 +141,47 @@
 
 import {
   Dimensions,
+  FlatList,
   Image,
+  Modal,
+  NativeModules,
+  Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import CustomText from '../CustomText';
-import {family, size, vh} from '../../utils';
+import {family, size} from '../../utils';
 import {colors} from '../../utils/Colors';
-import {appIcons} from '../../assets';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const {width, height} = Dimensions.get('screen');
+const {height} = Dimensions.get('screen');
+
+const hasNativeDatePicker = () => {
+  try {
+    if (Platform.OS === 'ios') return true;
+    return NativeModules.RNCDatePicker != null;
+  } catch {
+    return false;
+  }
+};
+
+const NATIVE_PICKER_AVAILABLE = hasNativeDatePicker();
+
+const getFormattedDate = d => {
+  if (!d || !(d instanceof Date) || isNaN(d)) return '';
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const formatDateLabel = d => {
+  if (!d || !(d instanceof Date)) return '';
+  const months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+};
 
 const CustomDatePicker = ({
   dateStyle,
@@ -165,52 +192,55 @@ const CustomDatePicker = ({
   Iconcolor,
   onDateChange,
   date,
-  captureTime = false,  // NEW: Optional prop, default false to preserve old behavior
+  captureTime = false,
 }) => {
-  // UPDATED: getFormattedDate now handles full ISO by extracting local date
-  const getFormattedDate = d => {
-    if (d && !isNaN(d) && d instanceof Date) {
-      // If captureTime and d has time (full datetime), still extract local date
-      const localDate = new Date(d);  // new Date(ISO) creates UTC Date, but getFullYear/etc are local
-      const year = localDate.getFullYear();
-      const month = String(localDate.getMonth() + 1).padStart(2, '0');
-      const day = String(localDate.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-    return '';
-  };
-
-  const [dob, setDob] = useState(getFormattedDate(date));
+  const [dob, setDob] = useState(date ? new Date(date) : new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showFallbackModal, setShowFallbackModal] = useState(false);
 
-  // Sync internal state with prop when date changes from parent
   useEffect(() => {
-    setDob(getFormattedDate(date));
+    if (date) setDob(new Date(date));
   }, [date]);
 
-  // UPDATED: handleDateChange now conditionally captures current time if captureTime=true
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      let dateToUse = selectedDate;  // Base: local midnight from picker
-
+      let dateToUse = new Date(selectedDate);
       if (captureTime) {
-        // NEW: Capture current local time and apply to selected date
         const now = new Date();
-        dateToUse = new Date(selectedDate);  // Clone to avoid mutating picker date
         dateToUse.setHours(now.getHours());
         dateToUse.setMinutes(now.getMinutes());
         dateToUse.setSeconds(0);
         dateToUse.setMilliseconds(0);
       }
+      setDob(dateToUse);
+      onDateChange && onDateChange(dateToUse);
+    }
+  };
 
-      const formattedDate = getFormattedDate(dateToUse);  // For display (date only)
-      setDob(formattedDate);
+  const fallbackDates = useMemo(() => {
+    const list = [];
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(start);
+      d.setDate(d.getDate() + i);
+      list.push({date: d, key: getFormattedDate(d)});
+    }
+    return list;
+  }, []);
 
-      if (onDateChange) {
-        // Pass full Date object (with time if captureTime) to parent
-        onDateChange(captureTime ? dateToUse : selectedDate);
-      }
+  const onSelectFallbackDate = d => {
+    setDob(d);
+    onDateChange && onDateChange(d);
+    setShowFallbackModal(false);
+  };
+
+  const openPicker = () => {
+    if (NATIVE_PICKER_AVAILABLE) {
+      setShowDatePicker(true);
+    } else {
+      setShowFallbackModal(true);
     }
   };
 
@@ -236,7 +266,7 @@ const CustomDatePicker = ({
       )}
       <TouchableOpacity
         style={[styles.dateContainer, dateStyle]}
-        onPress={() => setShowDatePicker(true)}>
+        onPress={openPicker}>
         {leftIcon ? (
           <Image
             source={leftIcon}
@@ -250,21 +280,65 @@ const CustomDatePicker = ({
           />
         ) : null}
         <CustomText
-          text={dob ? dob : 'Enter Date'}
+          text={dob ? getFormattedDate(dob) : 'Enter Date'}
           font={family?.Questrial_Regular}
           size={size.medium}
           color={dob ? colors?.text : colors?.placeholderText}
         />
       </TouchableOpacity>
-      {showDatePicker && (
+
+      {NATIVE_PICKER_AVAILABLE && showDatePicker && (
         <DateTimePicker
-          // UPDATED: value uses local date from dob (or current if null)
           value={dob ? new Date(dob) : new Date()}
           mode="date"
           display="default"
-          minimumDate={new Date()}  // Prevents past dates
+          minimumDate={new Date()}
           onChange={handleDateChange}
         />
+      )}
+
+      {!NATIVE_PICKER_AVAILABLE && (
+        <Modal
+          visible={showFallbackModal}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setShowFallbackModal(false)}>
+          <TouchableOpacity
+            style={styles.fallbackOverlay}
+            activeOpacity={1}
+            onPress={() => setShowFallbackModal(false)}>
+            <View style={styles.fallbackModal}>
+              <CustomText text="Select date" style={styles.fallbackTitle} />
+              <FlatList
+                data={fallbackDates}
+                keyExtractor={item => item.key}
+                style={styles.fallbackList}
+                initialNumToRender={30}
+                getItemLayout={(_, index) => ({
+                  length: 48,
+                  offset: 48 * index,
+                  index,
+                })}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    style={styles.fallbackItem}
+                    onPress={() => onSelectFallbackDate(item.date)}
+                    activeOpacity={0.7}>
+                    <CustomText
+                      text={formatDateLabel(item.date)}
+                      style={styles.fallbackItemText}
+                    />
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity
+                style={styles.fallbackCancel}
+                onPress={() => setShowFallbackModal(false)}>
+                <CustomText text="Cancel" style={styles.fallbackCancelText} />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       )}
     </View>
   );
@@ -292,5 +366,50 @@ const styles = StyleSheet.create({
     marginBottom: -5,
     zIndex: 999,
     paddingHorizontal: 5,
+  },
+  fallbackOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  fallbackModal: {
+    backgroundColor: colors?.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    maxHeight: height * 0.6,
+    paddingBottom: 24,
+  },
+  fallbackTitle: {
+    fontFamily: family?.Gilroy_SemiBold,
+    fontSize: size?.large,
+    color: colors?.text,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors?.borderLight || '#eee',
+  },
+  fallbackList: {
+    maxHeight: height * 0.4,
+  },
+  fallbackItem: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors?.borderLight || '#eee',
+  },
+  fallbackItemText: {
+    fontFamily: family?.Questrial_Regular,
+    fontSize: size?.medium,
+    color: colors?.text,
+  },
+  fallbackCancel: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  fallbackCancelText: {
+    fontFamily: family?.Gilroy_SemiBold,
+    fontSize: size?.medium,
+    color: colors?.secondary,
   },
 });

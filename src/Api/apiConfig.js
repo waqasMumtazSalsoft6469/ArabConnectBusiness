@@ -20,7 +20,7 @@ const baseQuery = async (args, api, extraOptions) => {
     prepareHeaders: (headers, {getState}) => {
       const token = getState().auth.token;
       const tempToken = getState().auth.tempToken;
-      console.log('token', token);
+      // console.log('token', token);
 
       if (token || tempToken) {
         headers.set('authorization', `Bearer ${token || tempToken}`);

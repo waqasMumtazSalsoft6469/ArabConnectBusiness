@@ -18,7 +18,7 @@ const CustomFastImage = ({uri, style, resizeMode}) => {
       <FastImage
         source={uri}
         style={StyleSheet.absoluteFill}
-        resizeMode={resizeMode ? resizeMode : FastImage.resizeMode.cover}
+        resizeMode={resizeMode || 'cover'}
         onLoadStart={() => setLoading(true)}
         onLoadEnd={() => setLoading(false)}
       />

@@ -290,7 +290,7 @@ const EventAdd = () => {
                   leftIcon={appIcons.calendar2}
                   staric={true}
                   labelStyle={{marginLeft: 20}}
-                  date={values.date ? new Date(values.date) : null}
+                  date={values.date ? new Date(values.date) : new Date()}
                   onDateChange={date =>
                     setFieldValue('date', date.toISOString())
                   }
