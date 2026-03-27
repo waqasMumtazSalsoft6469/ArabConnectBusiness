@@ -13,6 +13,7 @@ import {family, size, vh, vw} from '../utils';
 import CustomText from './CustomText';
 import Shadows from '../helpers/Shadows';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
 import {appIcons, appImages} from '../assets';
 import {
   formatDate,
@@ -111,59 +112,41 @@ const CustomCard = ({
       )}
 
       {myBusinessCard && (
-        <View style={styles.bookingContainer}>
-          {/* <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={onRemovePress}
-            style={{
-              padding: 10,
-              position: 'absolute',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 50,
-              backgroundColor: 'transparent',
-              zIndex: 999,
-              right: 5,
-              top: 5,
-            }}>
-            <Image
-              source={appIcons?.remove}
-              style={{
-                width: 20,
-                height: 20,
-                resizeMode: 'contain',
-                tintColor: 'white',
-              }}
+        <View style={styles.modernBizWrap}>
+          <View style={styles.modernBizBanner}>
+            <FastImage
+              source={
+                item?.image ? getImageUrl(item?.image) : appImages.userImage
+              }
+              style={styles.modernBizImage}
+              resizeMode={FastImage.resizeMode.cover}
             />
-          </TouchableOpacity> */}
-
-          <CustomIcon
-            src={getImageUrl(item?.image)}
-            disabled={true}
-            customIconWrapper={styles.eventImg}
-            resizeMode={'cover'}
-            customIconStyle={{
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            }}
-          />
-
-          <View style={styles?.eventItems}>
-            <View>
+            <LinearGradient
+              colors={['transparent', 'rgba(15,23,42,0.88)']}
+              style={styles.modernBizGradient}
+            />
+            <View style={styles.modernBizTitleBox}>
               <CustomText
                 text={item?.businessName}
-                color={colors.headingText}
-                font={family?.Gilroy_Medium}
-                size={size.h6}
-                numberOfLines={1}
+                color={colors.white}
+                font={family.Gilroy_SemiBold}
+                size={size.h5}
+                numberOfLines={2}
               />
+            </View>
+          </View>
+          <View style={styles.modernBizBody}>
+            <Image
+              source={appIcons.locationIcon}
+              style={styles.modernBizLocIcon}
+            />
+            <View style={{flex: 1}}>
               <CustomText
                 text={item?.location?.address}
-                color={colors.secondary}
-                font={family?.Gilroy_Medium}
-                size={size.large}
-                numberOfLines={2}
-                style={{width: vw * 50}}
+                color={colors.headingText}
+                font={family.Questrial_Regular}
+                size={size.medium}
+                numberOfLines={3}
               />
             </View>
           </View>
@@ -1118,5 +1101,48 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 10,
+  },
+  modernBizWrap: {
+    borderRadius: 26,
+    overflow: 'hidden',
+    backgroundColor: colors.white,
+    marginBottom: 20,
+    marginHorizontal: 4,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 12},
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modernBizBanner: {
+    height: height * 0.22,
+    width: '100%',
+    position: 'relative',
+  },
+  modernBizImage: {
+    width: '100%',
+    height: '100%',
+  },
+  modernBizGradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  modernBizTitleBox: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    bottom: 16,
+  },
+  modernBizBody: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: 18,
+    gap: 12,
+  },
+  modernBizLocIcon: {
+    width: 20,
+    height: 20,
+    tintColor: colors.primary,
+    resizeMode: 'contain',
+    marginTop: 2,
   },
 });

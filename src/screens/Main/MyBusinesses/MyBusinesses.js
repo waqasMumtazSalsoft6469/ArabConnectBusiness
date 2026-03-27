@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, Dimensions, FlatList, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Dimensions, View, StyleSheet} from 'react-native';
 import {colors} from '../../../utils/Colors';
 import NavService from '../../../helpers/NavService';
 import AppBackground from '../../../components/AppBackground';
-import {dealItems} from '../../../utils/dummyData';
 import {SearchInput} from '../../../components/CustomTextInput';
 import CustomCard from '../../../components/CustomCard';
 import {useFetchMyBusinessProfilesQuery} from '../../../Api/businessApiSlice';
@@ -16,9 +15,9 @@ import PullToRefreshFlatList from '../../../components/PulltoRefresh/PullToRefre
 import {useIsFocused} from '@react-navigation/native';
 import {vh} from '../../../utils';
 
-const {width, height} = Dimensions.get('screen');
+const {height} = Dimensions.get('screen');
 const MyBusinesses = () => {
-  const {data, isLoading, error, refetch} = useFetchMyBusinessProfilesQuery();
+  const {data, isLoading, refetch} = useFetchMyBusinessProfilesQuery();
   const isFocused = useIsFocused();
   LOG('DATAsadas: ', data?.docs);
 
@@ -29,17 +28,15 @@ const MyBusinesses = () => {
   }, [isFocused]);
   return (
     <AppBackground menu={true} title={'MY BUSINESSES'} notification={true}>
-      <View style={{paddingHorizontal: 20, paddingVertical: 15, marginTop: 10}}>
-        <SearchInput placeholder={'Search for Businesses'} />
+      <View style={styles.page}>
+        <View style={styles.searchWrap}>
+          <SearchInput placeholder={'Search for Businesses'} />
+        </View>
         {data?.docs?.length > 0 ? (
           <>
             <PullToRefreshFlatList
               refetch={refetch}
-              contentContainerStyle={{
-                paddingBottom: height * 0.18,
-                backgroundColor: colors?.white,
-                marginTop: height * 0.02,
-              }}
+              contentContainerStyle={styles.listContent}
               showsVerticalScrollIndicator={false}
               data={data?.docs}
               keyExtractor={(item, index) => index.toString()}
@@ -58,11 +55,7 @@ const MyBusinesses = () => {
           <PullToRefreshScrollView
             onRefresh={refetch}
             refreshingColor={colors2?.theme?.secondary}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingBottom: 20,
-              marginTop: vh * 3,
-            }}>
+            contentContainerStyle={styles.emptyScroll}>
             {isLoading && <ActivityLoader color={colors2?.theme?.secondary} />}
             <EmptyDataComponent
               message={
@@ -75,5 +68,28 @@ const MyBusinesses = () => {
     </AppBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+  searchWrap: {
+    paddingHorizontal: 18,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  listContent: {
+    paddingBottom: height * 0.2,
+    paddingHorizontal: 12,
+    paddingTop: vh * 1,
+    backgroundColor: '#F4F6FB',
+  },
+  emptyScroll: {
+    flexGrow: 1,
+    paddingBottom: 20,
+    marginTop: vh * 3,
+  },
+});
 
 export default MyBusinesses;

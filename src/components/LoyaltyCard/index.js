@@ -1,14 +1,21 @@
 import {StyleSheet, View, Animated, TouchableOpacity} from 'react-native';
 import React, {useRef} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 import {HEIGHT, WIDTH} from '../../theme/units';
 import {family, size, vh} from '../../utils';
 import CustomIcon from '../CustomIcon';
 import CustomText from '../CustomText';
 import {colors} from '../../utils/Colors';
 import {appIcons} from '../../assets';
-import {formatDateYear, LOG} from '../../utils/helperFunction';
+import {formatDateYear} from '../../utils/helperFunction';
 
-const LoyaltyCard = ({item, navigation, isDashboard = false, disabled}) => {
+const LoyaltyCard = ({
+  item,
+  navigation,
+  isDashboard = false,
+  disabled,
+  hubVariant = false,
+}) => {
   const isCustomerCard = item?.customerCard === true;
 
   // WIDTH LOGIC
@@ -26,7 +33,7 @@ const LoyaltyCard = ({item, navigation, isDashboard = false, disabled}) => {
 
     Animated.parallel([
       Animated.spring(scaleAnim, {
-        toValue: 0.92,
+        toValue: hubVariant ? 0.97 : 0.92,
         friction: 4,
         tension: 150,
         useNativeDriver: true,
@@ -171,10 +178,38 @@ const LoyaltyCard = ({item, navigation, isDashboard = false, disabled}) => {
                 </View>
               </View>
             </View>
+          ) : hubVariant ? (
+            <LinearGradient
+              colors={(() => {
+                const c = item?.color || colors.primary;
+                return [c + '44', c];
+              })()}
+              start={{x: 0.1, y: 0}}
+              end={{x: 0.9, y: 1}}
+              style={styles.hubGradient}>
+              <View style={styles.hubIconRing}>
+                <CustomIcon
+                  src={item.icon}
+                  disabled
+                  size={HEIGHT * 0.048}
+                  resizeMode="contain"
+                />
+              </View>
+              <CustomText
+                text={item.title}
+                font={family.Gilroy_SemiBold}
+                size={size.h5}
+                color={colors.white}
+              />
+              <CustomText
+                text={item.subtitle}
+                font={family.Questrial_Regular}
+                size={size.medium}
+                color="rgba(255,255,255,0.92)"
+                style={{marginTop: vh * 0.6}}
+              />
+            </LinearGradient>
           ) : (
-            /* -------------------------------------
-               ORIGINAL LOYALTY CARD (WITH ICON)
-            ---------------------------------------*/
             <View
               style={[
                 isDashboard
@@ -236,10 +271,34 @@ export default LoyaltyCard;
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 20,
+    borderRadius: 26,
     overflow: 'hidden',
     backgroundColor: 'white',
     elevation: 5,
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+  },
+
+  hubGradient: {
+    flex: 1,
+    // padding: vh * 2.2,
+    minHeight: HEIGHT * 0.22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 26,
+  },
+  hubIconRing: {
+    width: HEIGHT * 0.1,
+    height: HEIGHT * 0.1,
+    borderRadius: HEIGHT * 0.05,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: vh * 1.2,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.45)',
   },
 
   gradientBackground: {
