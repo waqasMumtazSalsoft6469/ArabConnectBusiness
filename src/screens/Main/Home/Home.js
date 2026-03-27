@@ -267,8 +267,7 @@ const Home = () => {
       title={'DASHBOARD'}
       notification={true}
       titleColor={'white'}
-      isDashboard={true}
-      headerCustomStyles={{backgroundColor: colors?.primary}}>
+      isDashboard={true}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View
           style={{

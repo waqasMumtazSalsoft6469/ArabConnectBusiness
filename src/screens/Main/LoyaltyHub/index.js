@@ -25,14 +25,13 @@ const LoyaltyHub = () => {
       description={'Reward your customers'}
       notification={true}
       titleColor={'white'}
-      isDashboard={true}
-      headerCustomStyles={{backgroundColor: colors.primary}}>
+      isDashboard={true}>
       <View
         style={{
           paddingVertical: vh * 2,
           paddingHorizontal: vh * 1.5,
           flex: 1,
-          backgroundColor: '#F0F0F0',
+          backgroundColor: colors.grayBg,
         }}>
         <FlatList
           data={hubItems}

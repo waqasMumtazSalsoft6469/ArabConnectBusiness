@@ -4,154 +4,210 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
-  ImageBackground,
   Platform,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors} from '../utils/Colors';
-import {appIcons, appImages} from '../assets';
+import {appIcons} from '../assets';
 import CustomText from './CustomText';
 import {size} from '../utils';
-import {CommonActions} from '@react-navigation/native';
 import NavService from '../helpers/NavService';
 import {useSubscriptionGuard} from '../Api/methods/method';
 
-const {width} = Dimensions.get('screen');
 const isAndroid = Platform.OS === 'android';
 
 const TabBar = ({state, navigation}) => {
-  // const {data, isLoading} = useFetchActiveSubscriptionQuery();
-  // LOG('SUBSCRIPTION DATA: ', data);
+  const {navigateWithSubscription} = useSubscriptionGuard(navigation);
+  const insets = useSafeAreaInsets();
+  const padBottom = Math.max(insets.bottom, isAndroid ? 10 : 8);
 
-  const {navigateWithSubscription, isSubscribed} =
-    useSubscriptionGuard(navigation);
+  const tabMeta = routeName => {
+    switch (routeName) {
+      case 'HomeStack':
+        return {icon: appIcons.home, label: 'Home'};
+      case 'CouponStack':
+        return {icon: appIcons.couponIcon, label: 'Coupons'};
+      case 'EventStack':
+        return {icon: appIcons.scan2, label: 'Scan', isScan: true};
+      case 'LoyaltyStack':
+        return {icon: appIcons.campaignIcon, label: 'Loyalty'};
+      case 'MyBusinessStack':
+        return {icon: appIcons.myBusinesses, label: 'Business'};
+      default:
+        return {icon: appIcons.homeUnSelected, label: 'Tab'};
+    }
+  };
 
-  const resetAndNavigate = routeName => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: routeName}],
-      }),
-    );
+  const onTabPress = routeName => {
+    if (routeName === 'EventStack') {
+      NavService.navigate('QRScannerScreen');
+      return;
+    }
+    if (
+      routeName === 'CouponStack' ||
+      routeName === 'LoyaltyStack' ||
+      routeName === 'MyBusinessStack'
+    ) {
+      navigateWithSubscription(routeName, true, {fromTab: true});
+    } else {
+      navigateWithSubscription(routeName);
+    }
   };
 
   return (
-    <ImageBackground
-      style={{
-        position: 'absolute',
-        width: '100%',
-        bottom: isAndroid ? -12 : 0,
-      }}
-      source={appImages?.tabBar}
-      resizeMode="stretch"
-      imageStyle={styles?.tabbarContainer}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          gap: 10,
-        }}>
+    <View
+      pointerEvents="box-none"
+      style={[styles.barRoot, {paddingBottom: padBottom}]}>
+      <View style={styles.barCard}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
+          const meta = tabMeta(route.name);
+          const {icon, label, isScan} = meta;
 
-          let imageSrc = appIcons.homeUnSelected;
-          let tabLabel = 'Home';
-
-          if (route.name === 'MyBusinessStack') {
-            imageSrc = appIcons.myBusinesses;
-            tabLabel = 'BUSINESSES';
-          } else if (route.name === 'LoyaltyStack') {
-            imageSrc = appIcons.campaignIcon;
-            tabLabel = 'LOYALTY';
-          } else if (route.name === 'HomeStack') {
-            imageSrc = appIcons.home;
-            tabLabel = 'HOME';
-          } else if (route.name === 'CouponStack') {
-            imageSrc = appIcons.couponIcon;
-            tabLabel = 'COUPONS';
-          }
-
-          if (route.name === 'EventStack') {
+          if (isScan) {
             return (
               <TouchableOpacity
-                key={index}
-                activeOpacity={0.9}
-                onPress={() => NavService.navigate('QRScannerScreen')}
-                style={{
-                  backgroundColor: colors?.secondary,
-                  borderRadius: 100,
-                  height: 70,
-                  width: 70,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  top: -56,
-                }}>
-                <Image
-                  source={appIcons?.scan2}
-                  style={{
-                    height: '45%',
-                    width: '45%',
-                  }}
-                  tintColor={'white'}
-                  resizeMode="contain"
+                key={route.key}
+                accessibilityRole="button"
+                accessibilityLabel="Scan QR code"
+                activeOpacity={0.85}
+                onPress={() => onTabPress(route.name)}
+                style={styles.scanSlot}>
+                <View style={styles.scanFab}>
+                  <Image
+                    source={icon}
+                    style={styles.scanIcon}
+                    resizeMode="contain"
+                  />
+                </View>
+                <CustomText
+                  text={label}
+                  size={size.xxsmall}
+                  color={colors.primary}
+                  style={styles.tabLabel}
                 />
+                <View style={styles.tabDot} />
               </TouchableOpacity>
             );
           }
 
           return (
             <TouchableOpacity
-              key={index}
-              accessibilityState={isFocused ? {selected: true} : {}}
+              key={route.key}
               accessibilityRole="button"
-              activeOpacity={0.8}
-              onPress={() => {
-                if (
-                  route.name === 'CouponStack' ||
-                  route.name === 'LoyaltyStack' ||
-                  route.name === 'MyBusinessStack'
-                ) {
-                  navigateWithSubscription(route.name, true, { fromTab: true });
-                } else {
-                  navigateWithSubscription(route.name);
-                }
-              }}
-              style={styles.tabs}>
+              accessibilityState={isFocused ? {selected: true} : {}}
+              activeOpacity={0.85}
+              onPress={() => onTabPress(route.name)}
+              style={[styles.tab, isFocused && styles.tabActive]}>
               <Image
-                source={imageSrc}
-                style={{
-                  height: isAndroid ? 25 : 30,
-                  width: isAndroid ? 25 : 30,
-                  tintColor: isFocused
-                    ? colors.secondary
-                    : colors.unselectedTab,
-                }}
+                source={icon}
+                style={[
+                  styles.tabIcon,
+                  {
+                    tintColor: isFocused ? colors.primary : colors.lightText,
+                  },
+                ]}
                 resizeMode="contain"
               />
               <CustomText
-                text={tabLabel}
-                size={size?.tiny}
-                color={isFocused ? colors.secondary : colors.unselectedTab}
-                style={{marginTop: 4}}
+                text={label}
+                size={size.xxsmall}
+                color={isFocused ? colors.primary : colors.lightText}
+                style={styles.tabLabel}
+              />
+              <View
+                style={[
+                  styles.tabDot,
+                  isFocused && {backgroundColor: colors.secondary},
+                ]}
               />
             </TouchableOpacity>
           );
         })}
       </View>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  tabbarContainer: {},
-  tabs: {
+  barRoot: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 14,
+    paddingTop: 8,
+    backgroundColor: 'transparent',
+  },
+  barCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    backgroundColor: colors.white,
+    borderRadius: 22,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#E2E8EF',
+    shadowColor: '#0F172A',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  tab: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
-    marginBottom: 5,
-    height: 80,
-    borderRadius: 65,
+    justifyContent: 'flex-end',
+    paddingVertical: 4,
+    paddingHorizontal: 2,
+    borderRadius: 16,
+    minHeight: 56,
+  },
+  tabActive: {
+    backgroundColor: 'rgba(2, 66, 52, 0.07)',
+  },
+  tabIcon: {
+    width: isAndroid ? 22 : 24,
+    height: isAndroid ? 22 : 24,
+    marginBottom: 2,
+  },
+  tabLabel: {
+    marginTop: 2,
+    fontWeight: '600',
+  },
+  tabDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    marginTop: 4,
+    backgroundColor: 'transparent',
+  },
+  scanSlot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
+    minHeight: 56,
+  },
+  scanFab: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 2,
+    shadowColor: colors.secondary,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 10,
+    top: -18,
+  },
+  scanIcon: {
+    width: 26,
+    height: 26,
+    tintColor: colors.white,
   },
 });
 
